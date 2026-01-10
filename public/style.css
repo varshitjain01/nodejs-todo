@@ -1,0 +1,144 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 420px;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* ADD TODO */
+.add-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.add-form input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.add-form button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.add-form button:hover {
+    background: #5a67d8;
+}
+
+/* TODO LIST */
+.todo-list {
+    list-style: none;
+}
+
+.todo-list li {
+    background: #f4f6fb;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+}
+
+.todo-list li span {
+    font-size: 15px;
+    color: #333;
+}
+
+/* COMPLETED */
+.todo-list li.done {
+    background: #d4edda;
+    text-decoration: line-through;
+    color: #555;
+}
+
+/* ACTION BUTTONS */
+.actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+}
+
+.actions button {
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.actions button:first-child {
+    background: #28a745;
+    color: white;
+}
+
+.actions button:last-child {
+    background: #dc3545;
+    color: white;
+}
+
+/* EDIT FORM */
+.edit-form {
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+}
+
+.edit-form input {
+    flex: 1;
+    padding: 6px;
+    font-size: 13px;
+}
+
+.edit-form button {
+    background: #ffc107;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* CLEAR BUTTON */
+.clear-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background: #ff4757;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.clear-btn:hover {
+    background: #e84118;
+}
