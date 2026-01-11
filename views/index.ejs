@@ -1,34 +1,62 @@
-<ul class="todo-list">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Forge</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
 
+<div class="container">
+    <h1>Task Forge</h1>
+    <p class="subtitle">Plan • Track • Complete</p>
+
+    <!-- Add Task Form -->
+    <form action="/add" method="POST" class="add-form">
+        <input type="text" name="todo" placeholder="Add new task..." required>
+        <button type="submit">Add</button>
+    </form>
+
+    <!-- Empty State -->
     <% if (todos.length === 0) { %>
         <p class="empty-msg">No tasks yet. Add your first task 🚀</p>
     <% } %>
 
-    <% todos.forEach((todo, index) => { %>
-        <% if (todo.text && todo.text.trim() !== "") { %>
+    <!-- Todo List -->
+    <ul class="todo-list">
+        <% todos.forEach((todo, index) => { %>
+            <% if (todo.text && todo.text.trim() !== "") { %>
 
-        <li class="<%= todo.completed ? 'done' : '' %>">
+            <li class="<%= todo.completed ? 'done' : '' %>">
 
-            <span class="task-text"><%= todo.text %></span>
+                <span class="task-text"><%= todo.text %></span>
 
-            <div class="actions">
-                <form action="/toggle/<%= index %>" method="POST">
-                    <button class="check-btn">✔</button>
+                <div class="actions">
+                    <form action="/toggle/<%= index %>" method="POST">
+                        <button type="submit" class="check-btn">✔</button>
+                    </form>
+
+                    <form action="/delete/<%= index %>" method="POST">
+                        <button type="submit" class="delete-btn">✖</button>
+                    </form>
+                </div>
+
+                <form action="/edit/<%= index %>" method="POST" class="edit-form">
+                    <input type="text" name="updatedTodo" placeholder="Edit task" required>
+                    <button type="submit" class="update-btn">Update</button>
                 </form>
 
-                <form action="/delete/<%= index %>" method="POST">
-                    <button class="delete-btn">✖</button>
-                </form>
-            </div>
+            </li>
 
-            <form action="/edit/<%= index %>" method="POST" class="edit-form">
-                <input type="text" name="updatedTodo" placeholder="Edit task">
-                <button class="update-btn">Update</button>
-            </form>
+            <% } %>
+        <% }) %>
+    </ul>
 
-        </li>
+    <!-- Clear Completed -->
+    <form action="/clear-completed" method="POST">
+        <button class="clear-btn" type="submit">Clear Completed</button>
+    </form>
+</div>
 
-        <% } %>
-    <% }) %>
-
-</ul>
+</body>
+</html>
