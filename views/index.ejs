@@ -1,62 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Task Forge</title>
-    <link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8" />
+  <title>Task Forge</title>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
 
 <div class="container">
-    <h1>Task Forge</h1>
-    <p class="subtitle">Plan • Track • Complete</p>
 
-    <!-- Add Task Form -->
-    <form action="/add" method="POST" class="add-form">
-        <input type="text" name="todo" placeholder="Add new task..." required>
-        <button type="submit">Add</button>
-    </form>
+  <!-- HEADER -->
+  <h1>Task Forge</h1>
+  <p class="subtitle">Plan • Track • Complete</p>
 
-    <!-- Empty State -->
-    <% if (todos.length === 0) { %>
-        <p class="empty-msg">No tasks yet. Add your first task 🚀</p>
-    <% } %>
+  <!-- DASHBOARD -->
+  <div class="stats">
+    <div class="stat-card">
+      <h3>Total</h3>
+      <p id="total">0</p>
+    </div>
+    <div class="stat-card">
+      <h3>Completed</h3>
+      <p id="completed">0</p>
+    </div>
+    <div class="stat-card">
+      <h3>Pending</h3>
+      <p id="pending">0</p>
+    </div>
+    <div class="stat-card progress">
+      <h3>Progress</h3>
+      <p id="progress">0%</p>
+    </div>
+  </div>
 
-    <!-- Todo List -->
-    <ul class="todo-list">
-        <% todos.forEach((todo, index) => { %>
-            <% if (todo.text && todo.text.trim() !== "") { %>
+  <!-- SEARCH & FILTER -->
+  <div class="top-controls">
+    <input type="text" id="search" placeholder="Search tasks..." />
+    <select id="filter">
+      <option value="all">All</option>
+      <option value="completed">Completed</option>
+      <option value="pending">Pending</option>
+    </select>
+    <button id="themeToggle">🌙</button>
+  </div>
 
-            <li class="<%= todo.completed ? 'done' : '' %>">
+  <!-- ADD TASK -->
+  <form action="/add" method="POST" class="add-bar">
+    <input type="text" name="todo" placeholder="Add new task..." required />
+    <button type="submit">Add</button>
+  </form>
 
-                <span class="task-text"><%= todo.text %></span>
+  <!-- EMPTY STATE -->
+  <% if (todos.length === 0) { %>
+    <div class="empty-msg">
+      <h2>No tasks yet 🚀</h2>
+      <p>Start organizing your day</p>
+    </div>
+  <% } %>
 
-                <div class="actions">
-                    <form action="/toggle/<%= index %>" method="POST">
-                        <button type="submit" class="check-btn">✔</button>
-                    </form>
+  <!-- TASK LIST -->
+  <ul class="todo-list">
+    <% todos.forEach((todo, index) => { %>
+      <% if (todo.text && todo.text.trim() !== "") { %>
+        <li class="<%= todo.completed ? 'done' : '' %>">
+          
+          <span class="task-text"><%= todo.text %></span>
 
-                    <form action="/delete/<%= index %>" method="POST">
-                        <button type="submit" class="delete-btn">✖</button>
-                    </form>
-                </div>
+          <div class="actions">
+            <form action="/toggle/<%= index %>" method="POST">
+              <button class="check-btn" title="Complete">✔</button>
+            </form>
+            <form action="/delete/<%= index %>" method="POST">
+              <button class="delete-btn" title="Delete">✖</button>
+            </form>
+          </div>
+        </li>
+      <% } %>
+    <% }) %>
+  </ul>
 
-                <form action="/edit/<%= index %>" method="POST" class="edit-form">
-                    <input type="text" name="updatedTodo" placeholder="Edit task" required>
-                    <button type="submit" class="update-btn">Update</button>
-                </form>
-
-            </li>
-
-            <% } %>
-        <% }) %>
-    </ul>
-
-    <!-- Clear Completed -->
-    <form action="/clear-completed" method="POST">
-        <button class="clear-btn" type="submit">Clear Completed</button>
-    </form>
 </div>
 
+<div id="toast"></div>
+
+<script src="/script.js"></script>
 </body>
 </html>
