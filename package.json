@@ -13,5 +13,10 @@
     "body-parser": "^2.2.2",
     "ejs": "^3.1.10",
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
+    "globals": "^17.0.0"
   }
 }
