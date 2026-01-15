@@ -48,6 +48,7 @@ pipeline {
                   -Dsonar.projectKey=varshitjain01_nodejs-todo ^
                   -Dsonar.organization=varshitjain01 ^
                   -Dsonar.sources=. ^
+                  -Dsonar.exclusions=__tests__/** ^
                   -Dsonar.tests=__tests__ ^
                   -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info ^
                   -Dsonar.host.url=https://sonarcloud.io ^
