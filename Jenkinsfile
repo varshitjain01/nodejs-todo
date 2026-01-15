@@ -50,6 +50,7 @@ pipeline {
                   -Dsonar.sources=. ^
                   -Dsonar.exclusions=__tests__/** ^
                   -Dsonar.tests=__tests__ ^
+                  -Dsonar.exclusions=coverage/**,__tests__/**
                   -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info ^
                   -Dsonar.host.url=https://sonarcloud.io ^
                   -Dsonar.token=%SONAR_TOKEN%
