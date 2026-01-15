@@ -33,7 +33,7 @@ pipeline {
             }
             steps {
                 bat '''
-                sonar-scanner ^
+                npx sonar-scanner ^
                   -Dsonar.projectKey=nodejs-todo ^
                   -Dsonar.sources=. ^
                   -Dsonar.host.url=%SONAR_HOST_URL% ^
