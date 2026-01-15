@@ -27,11 +27,16 @@ pipeline {
             }
         }
 
-        stage('Unit Tests') {
-    steps {
-        bat 'npm test'
-    }
-}
+        stage('Unit Tests with Coverage') {
+            steps {
+                bat 'npm test'
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'coverage/**', fingerprint: true
+                }
+            }
+        }
 
         stage('SonarCloud Analysis') {
             environment {
@@ -43,6 +48,8 @@ pipeline {
                   -Dsonar.projectKey=varshitjain01_nodejs-todo ^
                   -Dsonar.organization=varshitjain01 ^
                   -Dsonar.sources=. ^
+                  -Dsonar.tests=__tests__ ^
+                  -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info ^
                   -Dsonar.host.url=https://sonarcloud.io ^
                   -Dsonar.token=%SONAR_TOKEN%
                 '''
