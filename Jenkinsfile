@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"
-        SONAR_HOST_URL = "http://localhost:9000"
+        SONAR_HOST_URL = "https://sonarcloud.io"
     }
 
     stages {
@@ -27,16 +27,17 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('SonarCloud Analysis') {
             environment {
-                SONAR_TOKEN = credentials('sonar-token')
+                SONAR_TOKEN = credentials('sonarcloud-token')
             }
             steps {
                 bat '''
                 npx sonar-scanner ^
-                  -Dsonar.projectKey=nodejs-todo ^
+                  -Dsonar.projectKey=varshitjain01_nodejs-todo ^
+                  -Dsonar.organization=varshitjain01 ^
                   -Dsonar.sources=. ^
-                  -Dsonar.host.url=%SONAR_HOST_URL% ^
+                  -Dsonar.host.url=https://sonarcloud.io ^
                   -Dsonar.token=%SONAR_TOKEN%
                 '''
             }
