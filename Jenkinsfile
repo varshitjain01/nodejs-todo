@@ -48,6 +48,17 @@ pipeline {
             }
         }
 
+        stage('Trivy Image Scan') {
+            steps {
+                bat '''
+                "%DOCKER%" run --rm ^
+                  -v /var/run/docker.sock:/var/run/docker.sock ^
+                  aquasec/trivy:latest ^
+                  image nodejs-todo:latest
+                '''
+            }
+        }
+
         stage('Deploy Container') {
             steps {
                 bat '''
