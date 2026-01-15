@@ -27,6 +27,12 @@ pipeline {
             }
         }
 
+        stage('Unit Tests') {
+    steps {
+        bat 'npm test'
+    }
+}
+
         stage('SonarCloud Analysis') {
             environment {
                 SONAR_TOKEN = credentials('sonarcloud-token')

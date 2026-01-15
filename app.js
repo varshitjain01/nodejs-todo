@@ -10,7 +10,6 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-
 const dataFile = path.join(__dirname, "data", "todos.json");
 
 function getTodos() {
@@ -61,6 +60,12 @@ app.post("/clear-completed", (req, res) => {
     res.redirect("/");
 });
 
-app.listen(PORT, () => {
-    console.log(`Todo app running on port ${PORT}`);
-});
+/* 🔹 IMPORTANT CHANGE FOR UNIT TESTING */
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Todo app running on port ${PORT}`);
+    });
+}
+
+/* 🔹 EXPORT APP FOR JEST */
+module.exports = app;
