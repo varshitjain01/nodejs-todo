@@ -4,7 +4,7 @@ export default [
   // Backend (Node.js)
   {
     files: ["**/*.js"],
-    ignores: ["public/**/*.js"],
+    ignores: ["public/**/*.js", "__tests__/**/*.js"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "commonjs",
@@ -25,6 +25,22 @@ export default [
       sourceType: "script",
       globals: {
         ...globals.browser
+      }
+    },
+    rules: {
+      "no-undef": "error"
+    }
+  },
+
+  // Unit Tests (Jest)
+  {
+    files: ["__tests__/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "commonjs",
+      globals: {
+        ...globals.jest,
+        ...globals.node
       }
     },
     rules: {
