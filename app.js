@@ -3,9 +3,23 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
 
+/* 🔹 Prometheus */
+const client = require("prom-client");
+
 const app = express();
 const PORT = 3000;
 
+/* ------------------ Prometheus Setup ------------------ */
+// Collect default Node.js metrics (CPU, memory, event loop, etc.)
+client.collectDefaultMetrics();
+
+// Expose /metrics endpoint
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", client.register.contentType);
+  res.end(await client.register.metrics());
+});
+
+/* ------------------ App Config ------------------ */
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
