@@ -24,6 +24,7 @@ pipeline {
         stage('ESLint') {
             steps {
                 bat 'npx eslint .'
+                 echo ESLint completed successfully
             }
         }
 
