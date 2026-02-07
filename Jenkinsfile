@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"
         SONAR_HOST_URL = "https://sonarcloud.io"
+        DOCKER = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"
     }
 
     stages {
@@ -71,7 +71,8 @@ pipeline {
                   -v //var/run/docker.sock:/var/run/docker.sock ^
                   -v %WORKSPACE%:/workspace ^
                   aquasec/trivy:latest ^
-                  image --severity HIGH ^
+                  image --scanners vuln ^
+                  --severity HIGH ^
                   --exit-code 1 ^
                   --format json ^
                   -o /workspace/trivy-report.json ^
@@ -103,7 +104,7 @@ Build Number: ${BUILD_NUMBER}
 
 Please check Jenkins console output and download trivy-report.json from the workspace.
                 """,
-                to: "varshitjain01@gmail.com"
+                to: "varshit.18043@sakec.ac.in"
             )
         }
     }
