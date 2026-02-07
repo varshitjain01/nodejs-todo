@@ -60,7 +60,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat '"%DOCKER%" build -t nodejs-todo .'
+                bat '"%DOCKER%" build -t nodejs-todo:latest .'
             }
         }
 
@@ -68,9 +68,14 @@ pipeline {
             steps {
                 bat '''
                 "%DOCKER%" run --rm ^
-                  -v /var/run/docker.sock:/var/run/docker.sock ^
+                  -v //var/run/docker.sock:/var/run/docker.sock ^
+                  -v %WORKSPACE%:/workspace ^
                   aquasec/trivy:latest ^
-                  image nodejs-todo:latest
+                  image --severity HIGH ^
+                  --exit-code 1 ^
+                  --format json ^
+                  -o /workspace/trivy-report.json ^
+                  nodejs-todo:latest
                 '''
             }
         }
@@ -80,9 +85,26 @@ pipeline {
                 bat '''
                 "%DOCKER%" stop todo-container || exit 0
                 "%DOCKER%" rm todo-container || exit 0
-                "%DOCKER%" run -d -p 3000:3000 --name todo-container nodejs-todo
+                "%DOCKER%" run -d -p 3000:3000 --name todo-container nodejs-todo:latest
                 '''
             }
+        }
+    }
+
+    post {
+        failure {
+            emailext (
+                subject: "⚠ HIGH Vulnerabilities Detected - Build ${BUILD_NUMBER}",
+                body: """
+Build Failed due to HIGH vulnerabilities detected by Trivy.
+
+Job Name: ${JOB_NAME}
+Build Number: ${BUILD_NUMBER}
+
+Please check Jenkins console output and download trivy-report.json from the workspace.
+                """,
+                to: "your-email@gmail.com"
+            )
         }
     }
 }
