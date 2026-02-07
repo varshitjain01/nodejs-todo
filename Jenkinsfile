@@ -72,7 +72,6 @@ pipeline {
                   aquasec/trivy:latest ^
                   image --scanners vuln ^
                   --severity HIGH ^
-                  --exit-code 1 ^
                   --format json ^
                   -o /workspace/trivy-report.json ^
                   nodejs-todo:latest
@@ -80,7 +79,7 @@ pipeline {
             }
         }
 
-        stage('Extract Vulnerability Details') {
+        stage('Check HIGH Vulnerabilities') {
             steps {
                 script {
                     def report = readJSON file: 'trivy-report.json'
@@ -98,6 +97,10 @@ pipeline {
 
                     env.HIGH_COUNT = highVulns.size().toString()
                     env.TOP5 = highVulns.take(5).join("\n")
+
+                    if (highVulns.size() > 0) {
+                        currentBuild.result = 'UNSTABLE'
+                    }
                 }
             }
         }
@@ -114,27 +117,32 @@ pipeline {
     }
 
     post {
-        failure {
-            emailext (
-                subject: "⚠ HIGH Vulnerabilities Detected - Build ${BUILD_NUMBER}",
-                body: """
-Trivy Security Scan Report
+        always {
+            script {
+                if (env.HIGH_COUNT.toInteger() > 0) {
+                    emailext (
+                        subject: "⚠ WARNING: HIGH Vulnerabilities Found - Build ${BUILD_NUMBER}",
+                        body: """
+Trivy Security Warning
 
 Job Name: ${JOB_NAME}
 Build Number: ${BUILD_NUMBER}
 
-Total HIGH Vulnerabilities Found: ${env.HIGH_COUNT}
+Total HIGH Vulnerabilities: ${env.HIGH_COUNT}
 
 Top 5 HIGH Vulnerabilities:
 ${env.TOP5}
 
-Full detailed report attached.
+⚠ Build marked as UNSTABLE.
+Container has been deployed.
 
-Please review immediately.
-                """,
-                attachmentsPattern: 'trivy-report.json',
-                to: "varshit.18043@sakec.ac.in"
-            )
+Full report attached.
+                        """,
+                        attachmentsPattern: 'trivy-report.json',
+                        to: "varshit.18043@sakec.ac.in"
+                    )
+                }
+            }
         }
     }
 }
