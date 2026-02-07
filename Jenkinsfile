@@ -24,7 +24,6 @@ pipeline {
         stage('ESLint') {
             steps {
                 bat 'npx eslint .'
-                echo 'ESLint completed successfully'
             }
         }
 
@@ -81,6 +80,28 @@ pipeline {
             }
         }
 
+        stage('Extract Vulnerability Details') {
+            steps {
+                script {
+                    def report = readJSON file: 'trivy-report.json'
+                    def highVulns = []
+
+                    report.Results.each { result ->
+                        if (result.Vulnerabilities) {
+                            result.Vulnerabilities.each { vuln ->
+                                if (vuln.Severity == "HIGH") {
+                                    highVulns << "${vuln.VulnerabilityID} - ${vuln.PkgName}"
+                                }
+                            }
+                        }
+                    }
+
+                    env.HIGH_COUNT = highVulns.size().toString()
+                    env.TOP5 = highVulns.take(5).join("\n")
+                }
+            }
+        }
+
         stage('Deploy Container') {
             steps {
                 bat '''
@@ -97,13 +118,21 @@ pipeline {
             emailext (
                 subject: "⚠ HIGH Vulnerabilities Detected - Build ${BUILD_NUMBER}",
                 body: """
-Build Failed due to HIGH vulnerabilities detected by Trivy.
+Trivy Security Scan Report
 
 Job Name: ${JOB_NAME}
 Build Number: ${BUILD_NUMBER}
 
-Please check Jenkins console output and download trivy-report.json from the workspace.
+Total HIGH Vulnerabilities Found: ${env.HIGH_COUNT}
+
+Top 5 HIGH Vulnerabilities:
+${env.TOP5}
+
+Full detailed report attached.
+
+Please review immediately.
                 """,
+                attachmentsPattern: 'trivy-report.json',
                 to: "varshit.18043@sakec.ac.in"
             )
         }
