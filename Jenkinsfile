@@ -103,7 +103,7 @@ Build Number: ${BUILD_NUMBER}
 
 Please check Jenkins console output and download trivy-report.json from the workspace.
                 """,
-                to: "your-email@gmail.com"
+                to: "varshitjain01@gmail.com"
             )
         }
     }
